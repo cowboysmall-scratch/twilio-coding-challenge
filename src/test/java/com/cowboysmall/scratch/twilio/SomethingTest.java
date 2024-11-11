@@ -25,15 +25,11 @@ public class SomethingTest {
 
     private JavaSparkContext sparkContext;
 
+
     @BeforeEach
     public void setUp() {
 
-        sparkSession =
-                SparkSession.builder()
-                        .appName("Something App")
-                        .master("local")
-                        .getOrCreate();
-
+        sparkSession = SparkSession.builder().appName("Something App").master("local").getOrCreate();
         sparkContext = new JavaSparkContext(sparkSession.sparkContext());
     }
 
@@ -52,22 +48,20 @@ public class SomethingTest {
 
         Dataset<Row> dataset = createDataset();
         assertThat(dataset.count(), equalTo(10L));
+        dataset.show();
 
 
-        Dataset<Row> cleaned =
-                dataset.na().drop("any");
+        Dataset<Row> cleaned = dataset.na().drop("any");
         assertThat(cleaned.count(), equalTo(7L));
         cleaned.show();
 
 
-        Dataset<Row> filtered =
-                cleaned.filter(cleaned.col("score").gt(150));
+        Dataset<Row> filtered = cleaned.filter(cleaned.col("score").gt(150));
         assertThat(filtered.count(), equalTo(5L));
         filtered.show();
 
 
-        Dataset<Row> grouped =
-                filtered.groupBy("name", "year").max("score");
+        Dataset<Row> grouped = filtered.groupBy("name", "year").max("score");
         assertThat(grouped.count(), equalTo(4L));
         grouped.show();
     }
@@ -78,7 +72,6 @@ public class SomethingTest {
     private Dataset<Row> createDataset() {
 
         StructType schema = DataTypes.createStructType(
-
                 new StructField[]{
                         DataTypes.createStructField("id", DataTypes.StringType, true),
                         DataTypes.createStructField("name", DataTypes.StringType, true),
