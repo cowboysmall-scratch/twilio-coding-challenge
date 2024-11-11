@@ -50,7 +50,7 @@ public class SomethingTest {
     @Test
     public void testSomething() {
 
-        Dataset<Row> dataset = createDataset(sparkSession, sparkContext);
+        Dataset<Row> dataset = createDataset();
         assertThat(dataset.count(), equalTo(10L));
 
 
@@ -75,7 +75,7 @@ public class SomethingTest {
 
     //_________________________________________________________________________
 
-    private Dataset<Row> createDataset(SparkSession sparkSession, JavaSparkContext sparkContext) {
+    private Dataset<Row> createDataset() {
 
         StructType schema = DataTypes.createStructType(
 
