@@ -1,0 +1,17 @@
+target
+
+.gradle
+build
+
+.idea
+*.iws
+*.iml
+*.ipr
+
+.vscode
+
+**/*.log
+**/*.zip
+**/*.versionsBackup
+
+.DS_STORE
