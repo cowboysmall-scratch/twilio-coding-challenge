@@ -9,6 +9,8 @@ import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -19,20 +21,36 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class SomethingTest {
 
-    @Test
-    public void testSomething() {
+    private SparkSession sparkSession;
 
-        SparkSession sparkSession =
+    private JavaSparkContext sparkContext;
+
+    @BeforeEach
+    public void setUp() {
+
+        sparkSession =
                 SparkSession.builder()
                         .appName("Something App")
                         .master("local")
                         .getOrCreate();
 
-        JavaSparkContext sparkContext = new JavaSparkContext(sparkSession.sparkContext());
+        sparkContext = new JavaSparkContext(sparkSession.sparkContext());
+    }
+
+    @AfterEach
+    public void tearDown() {
+
+        sparkContext.close();
+        sparkSession.close();
+    }
+
+
+    //_________________________________________________________________________
+
+    @Test
+    public void testSomething() {
 
         Dataset<Row> dataset = createDataset(sparkSession, sparkContext);
-
-
         assertThat(dataset.count(), equalTo(10L));
 
 
@@ -52,10 +70,6 @@ public class SomethingTest {
                 filtered.groupBy("name", "year").max("score");
         assertThat(grouped.count(), equalTo(4L));
         grouped.show();
-
-
-        sparkContext.close();
-        sparkSession.close();
     }
 
 
