@@ -20,16 +20,20 @@ import static org.hamcrest.Matchers.equalTo;
 public class SomethingTest {
 
     @Test
-    public void testSomething() throws Exception {
+    public void testSomething() {
 
-        SparkSession sparkSession = createSparkSession();
-        JavaSparkContext sparkContext = createSparkContext(sparkSession);
+        SparkSession sparkSession =
+                SparkSession.builder()
+                        .appName("Something App")
+                        .master("local")
+                        .getOrCreate();
+
+        JavaSparkContext sparkContext = new JavaSparkContext(sparkSession.sparkContext());
+
         Dataset<Row> dataset = createDataset(sparkSession, sparkContext);
 
 
-
         assertThat(dataset.count(), equalTo(10L));
-
 
 
         Dataset<Row> cleaned =
@@ -38,12 +42,10 @@ public class SomethingTest {
         cleaned.show();
 
 
-
         Dataset<Row> filtered =
                 cleaned.filter(cleaned.col("score").gt(150));
         assertThat(filtered.count(), equalTo(5L));
         filtered.show();
-
 
 
         Dataset<Row> grouped =
@@ -52,26 +54,12 @@ public class SomethingTest {
         grouped.show();
 
 
-
         sparkContext.close();
         sparkSession.close();
     }
 
 
     //_________________________________________________________________________
-
-    private SparkSession createSparkSession() {
-
-        return SparkSession.builder()
-                .appName("Something App")
-                .master("local")
-                .getOrCreate();
-    }
-
-    private JavaSparkContext createSparkContext(SparkSession sparkSession) {
-
-        return new JavaSparkContext(sparkSession.sparkContext());
-    }
 
     private Dataset<Row> createDataset(SparkSession sparkSession, JavaSparkContext sparkContext) {
 
