@@ -1,17 +1,29 @@
+# Maven
 target
 
+# Gradle
 .gradle
 build
 
+# IntelliJ
 .idea
 *.iws
 *.iml
 *.ipr
 
+# Visual Studio Code
 .vscode
 
+# Eclipse
+.classpath
+.factorypath
+.project
+.settings
+
+# Misc
 **/*.log
 **/*.zip
 **/*.versionsBackup
 
+# MacOS
 .DS_STORE
